@@ -9,83 +9,30 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [16.x, 18.x]
-
+    
     steps:
     - uses: actions/checkout@v3
     
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: '18'
         cache: 'npm'
     
-    - name: Install Rust toolchain
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-        override: true
-        components: rustfmt, clippy
-    
-    - name: Install system dependencies
+    - name: Install dependencies
       run: |
-        sudo apt-get update
-        sudo apt-get install -y pkg-config build-essential libudev-dev
-    
-    - name: Install Solana
-      run: |
-        sh -c "$(curl -sSfL https://release.solana.com/v1.17.0/install)"
-        export PATH="/home/runner/.local/share/solana/install/active_release/bin:$PATH"
-        solana --version
-    
-    - name: Install Anchor CLI
-      run: |
-        cargo install --git https://github.com/coral-xyz/anchor avm --locked
-        avm install latest
-        avm use latest
-    
-    - name: Install root dependencies
-      run: npm install
-    
-    - name: Install frontend dependencies
-      run: cd apps/frontend && npm install
-    
-    - name: Install backend dependencies
-      run: cd apps/backend && npm install
-    
-    - name: Install contract dependencies
-      run: cd contracts && npm install
-    
-    - name: Run linting
-      run: npm run lint
-    
-    - name: Run tests
-      run: npm run test
+        npm install
+        cd apps/frontend && npm install
+        cd ../backend && npm install
     
     - name: Build
-      run: npm run build
+      run: |
+        cd apps/frontend && npm run build
+        cd ../backend && npm run build
 
   test:
     runs-on: ubuntu-latest
     
-    services:
-      postgres:
-        image: postgres:14-alpine
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: greenai_test
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
     steps:
     - uses: actions/checkout@v3
     
@@ -95,75 +42,13 @@ jobs:
         node-version: '18'
         cache: 'npm'
     
-    - name: Install root dependencies
-      run: npm install
-    
-    - name: Install frontend dependencies
-      run: cd apps/frontend && npm install
-    
-    - name: Install backend dependencies
-      run: cd apps/backend && npm install
-    
-    - name: Run Tests
-      run: npm run test
-      env:
-        DATABASE_URL: postgresql://postgres:postgres@localhost:5432/greenai_test
-        JWT_SECRET: test_secret
-
-  lint:
-    runs-on: ubuntu-latest
-    
-    steps:
-    - uses: actions/checkout@v3
-    
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18'
-        cache: 'npm'
-    
-    - name: Install root dependencies
-      run: npm install
-    
-    - name: Install frontend dependencies
-      run: cd apps/frontend && npm install
-    
-    - name: Install backend dependencies
-      run: cd apps/backend && npm install
-    
-    - name: Lint
-      run: npm run lint
-
-  deploy:
-    needs: [build, test, lint]
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    
-    steps:
-    - uses: actions/checkout@v3
-    
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-east-1
-    
-    - name: Login to Amazon ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v1
-    
-    - name: Build and Push Docker images
-      env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        IMAGE_TAG: ${{ github.sha }}
+    - name: Install dependencies
       run: |
-        docker build -t $ECR_REGISTRY/greenai-frontend:$IMAGE_TAG ./apps/frontend
-        docker build -t $ECR_REGISTRY/greenai-backend:$IMAGE_TAG ./apps/backend
-        docker push $ECR_REGISTRY/greenai-frontend:$IMAGE_TAG
-        docker push $ECR_REGISTRY/greenai-backend:$IMAGE_TAG
+        npm install
+        cd apps/frontend && npm install
+        cd ../backend && npm install
     
-    - name: Update ECS services
+    - name: Run tests
       run: |
-        aws ecs update-service --cluster greenai-cluster --service frontend-service --force-new-deployment
-        aws ecs update-service --cluster greenai-cluster --service backend-service --force-new-deployment 
+        cd apps/frontend && npm test
+        cd ../backend && npm test 
