@@ -105,11 +105,4 @@ Please read our [Contributing Guidelines](CONTRIBUTING.md) for details on our co
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Contact
-
-- Website: https://greenai.xyz
-- Email: contact@greenai.xyz
-- Twitter: [@GreenAIxyz](https://twitter.com/GreenAIxyz)
-- Discord: [GreenAI Community](https://discord.gg/greenai)
-
 Built with 💚 by the GreenAI Team 
