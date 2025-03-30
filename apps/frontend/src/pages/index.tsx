@@ -1,8 +1,12 @@
 import type { NextPage } from 'next'
-import App from '../App'
 
 const Home: NextPage = () => {
-  return <App />
+  return (
+    <div>
+      <h1>GreenAI</h1>
+      <p>Environmental Action Tokenization and AI Propagation Platform</p>
+    </div>
+  )
 }
 
 export default Home 
