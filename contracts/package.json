@@ -1,0 +1,23 @@
+{
+  "name": "@greenai/contracts",
+  "version": "1.0.1",
+  "private": true,
+  "scripts": {
+    "build": "anchor build",
+    "test": "anchor test",
+    "lint": "eslint tests --ext .ts"
+  },
+  "dependencies": {
+    "@project-serum/anchor": "^0.26.0",
+    "@solana/web3.js": "^1.91.0",
+    "@solana/spl-token": "^0.4.0"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.6",
+    "typescript": "^5.3.3",
+    "ts-mocha": "^10.0.0",
+    "eslint": "^8.57.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.1",
+    "@typescript-eslint/parser": "^7.0.1"
+  }
+} 
