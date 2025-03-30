@@ -8,9 +8,9 @@ import { setupDatabase } from './database';
 import { errorHandler } from './middleware/errorHandler';
 import { logger } from './utils/logger';
 import routes from './routes';
+import app from './app';
 
-const app = express();
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 3001;
 
 // Middleware
 app.use(cors());
