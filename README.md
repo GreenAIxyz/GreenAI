@@ -105,4 +105,9 @@ Please read our [Contributing Guidelines](CONTRIBUTING.md) for details on our co
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+## Links
+
+- Website: [https://www.greenai.work](https://www.greenai.work)
+- Twitter: [@greenaiwork](https://x.com/greenaiwork)
+
 Built with 💚 by the GreenAI Team 
