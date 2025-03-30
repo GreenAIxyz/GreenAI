@@ -1,0 +1,52 @@
+{
+  "name": "greenai",
+  "version": "1.0.0",
+  "description": "GreenAI - Environmental Action Tokenization and AI Propagation Platform",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend",
+    "contracts",
+    "shared"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && npm run dev",
+    "build": "npm run build:frontend && npm run build:backend",
+    "build:frontend": "cd frontend && npm run build",
+    "build:backend": "cd backend && npm run build",
+    "start": "cd backend && npm start",
+    "test": "npm run test:frontend && npm run test:backend",
+    "test:frontend": "cd frontend && npm test",
+    "test:backend": "cd backend && npm test",
+    "lint": "npm run lint:frontend && npm run lint:backend",
+    "lint:frontend": "cd frontend && npm run lint",
+    "lint:backend": "cd backend && npm run lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GreenAIxyz/GreenAI.git"
+  },
+  "keywords": [
+    "blockchain",
+    "solana",
+    "environmental",
+    "ai",
+    "tokenization"
+  ],
+  "author": "GreenAI Team",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/GreenAIxyz/GreenAI/issues"
+  },
+  "homepage": "https://github.com/GreenAIxyz/GreenAI#readme",
+  "devDependencies": {
+    "concurrently": "^8.2.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.3"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+} 
