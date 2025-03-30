@@ -23,30 +23,29 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     
+    - name: Install Anchor CLI
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y pkg-config build-essential libudev-dev
+        cargo install --git https://github.com/coral-xyz/anchor avm --locked
+        avm install latest
+        avm use latest
+    
     - name: Install dependencies
       run: |
-        npm ci
-        cd apps/frontend && npm ci
-        cd ../backend && npm ci
-        cd ../../contracts && npm ci
+        npm install
+        cd apps/frontend && npm install
+        cd ../backend && npm install
+        cd ../../contracts && npm install
     
     - name: Run linting
-      run: |
-        npm run lint
-        cd apps/frontend && npm run lint
-        cd ../backend && npm run lint
+      run: npm run lint
     
     - name: Run tests
-      run: |
-        cd apps/frontend && npm test
-        cd ../backend && npm test
-        cd ../../contracts && npm test
+      run: npm run test
     
     - name: Build
-      run: |
-        cd apps/frontend && npm run build
-        cd ../backend && npm run build
-        cd ../../contracts && anchor build
+      run: npm run build
 
   test:
     runs-on: ubuntu-latest
@@ -77,21 +76,15 @@ jobs:
     
     - name: Install Dependencies
       run: |
-        npm ci
-        cd apps/frontend && npm ci
-        cd ../backend && npm ci
+        npm install
+        cd apps/frontend && npm install
+        cd ../backend && npm install
     
-    - name: Run Frontend Tests
-      run: cd apps/frontend && npm test
-    
-    - name: Run Backend Tests
-      run: cd apps/backend && npm test
+    - name: Run Tests
+      run: npm run test
       env:
         DATABASE_URL: postgresql://postgres:postgres@localhost:5432/greenai_test
         JWT_SECRET: test_secret
-    
-    - name: Run Contract Tests
-      run: cd contracts && npm test
 
   lint:
     runs-on: ubuntu-latest
@@ -107,18 +100,15 @@ jobs:
     
     - name: Install Dependencies
       run: |
-        npm ci
-        cd apps/frontend && npm ci
-        cd ../backend && npm ci
+        npm install
+        cd apps/frontend && npm install
+        cd ../backend && npm install
     
-    - name: Lint Frontend
-      run: cd apps/frontend && npm run lint
-    
-    - name: Lint Backend
-      run: cd apps/backend && npm run lint
+    - name: Lint
+      run: npm run lint
 
   deploy:
-    needs: build
+    needs: [build, test, lint]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     
